@@ -41,10 +41,12 @@ function start() {
     )
         .then(function (inquirerResponse) {
             if (inquirerResponse.confirm) {
+                // placeOrder();
                 console.log("\nYou've entered: " + inquirerResponse.name);
                 console.log("\nYou've ordered: " + inquirerResponse.quantity);
             }
             else {
+                // quit();
                 console.log("\nTry again.");
             }
         });
