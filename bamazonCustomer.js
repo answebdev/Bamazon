@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var colors = require('colors');
 
 // Create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -22,9 +23,10 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     console.log("Connected as ID: " + connection.threadId + "\n");
-    console.log("W E L C O M E  T O  B A M A Z O N\n");
-    // Run the start function after the connection is made to prompt the user
+    console.log(colors.yellow("W E L C O M E  T O  B A M A Z O N"));
+    // Display table of products in the terminal
     displayTable();
+    // Run the start function after the connection is made to prompt the user
     // start();
 });
 
@@ -32,19 +34,13 @@ function displayTable() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
         for (var i = 0; i < res.length; i++) {
-            // console.log("ITEM ID" + " | " + "PRODUCT NAME" + "                                            | " + "DEPARTMENT NAME" +
-            //     " | " + "PRICE" + " | " + "STOCK" + "\n" + res[i].item_id + "       | " + 
-            //     res[i].product_name +
-            //     " | " + res[i].department_name + " | " + res[i].price +
-            //     " | " + res[i].stock_quantity + "\n");
-
-            console.log("PRODUCT ID: " + res[i].item_id);
+            console.log("\nPRODUCT ID: " + res[i].item_id);
             console.log("PRODUCT NAME: " + res[i].product_name);
             console.log("DEPARTMENT NAME: " + res[i].department_name);
-            console.log("PRICE: " + res[i].price.toFixed(2));
+            console.log("PRICE: " + "$" + res[i].price.toFixed(2));
             console.log("NUMBER AVAILABLE IN STOCK: " + res[i].stock_quantity + "\n");
-                
         }
+        start();
     })
 }
 
@@ -52,7 +48,7 @@ function start() {
     inquirer.prompt(
         {
             name: "productID",
-            message: "What is the ID of the product you would like to buy?",
+            message: "What would you like to buy? Please enter the Product ID.",
             type: "ID"
         },
         {
@@ -61,13 +57,27 @@ function start() {
             type: "quantity"
         }
     )
-        .then(function (inquirerResponse) {
-            if (inquirerResponse.confirm) {
-                console.log("\nYou've entered: " + inquirerResponse.name);
-                console.log("\nYou've ordered: " + inquirerResponse.quantity);
-            }
-            else {
-                console.log("\nTry again.");
-            }
-        });
+        // .then(function (inquirerResponse) {
+        //     if (inquirerResponse.confirm) {
+        //         console.log("\nYou've entered: " + inquirerResponse.name);
+        //         console.log("\nYou've ordered: " + inquirerResponse.quantity);
+        //     }
+        //     else {
+        //         console.log("\nTry again.");
+        //     }
+        // });
+
+        // .then(function (inquirerResponse) {
+        //     var correct = false;
+        //     for (var i = 0; i < inquirerResponse.length; i++) {
+        //         if (res[i].item_id === inquirerResponse.productID) {
+        //             correct = true;
+        //             var IDNumber = inquirerResponse.productID;
+        //             console.log("You chose: " + IDNumber);
+        //             // var id=i;
+        //         }
+        //     }
+        // })
+
+        
 }
