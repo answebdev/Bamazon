@@ -41,3 +41,5 @@ VALUES ("Alarm Clock", "Home & Kitchen", 10.69, 10);
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Suave Professionals Shampoo", "Shampoo & Conditioner", 3.99, 12);
+
+SELECT * FROM bamazonDB.products;
