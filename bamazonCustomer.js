@@ -84,15 +84,26 @@ function start() {
                 for (var i = 0; i < res.length; i++) {
                     console.log("\nYou chose Product ID " + res[i].item_id + ": " + res[i].product_name);
                     console.log("You chose: " + inquirerResponse.quantity);
-                    var inStock = res[0].inStock;
+                    // var inStock = res[0].inStock;
                     // if (inStock < quantity) {
                         if (inquirerResponse.quantity > res[i].stock_quantity) {
-                        console.log("Insufficient quantity!");
+                        console.log("Insufficient quantity! Please try again.\n");
+                        start();
                     } else {
-                        inStock -= quantity;
+
+                        connection.query("UPDATE products SET stock_quantity='"+(res[i].stock_quantity-inquirerResponse.quantity)+"' WHERE product_name='"+res[i].product_name+"'",function(err,res) {
+                            console.log("Item added to cart!");
+                            displayTable();
+                        })
+
+
+
+                        // inStock -= quantity;
                         // console.log("IN STOCK: " + inStock);
-                        console.log("Number available: " + res[i].stock_quantity + "\n");
-                        setTimeout(start, 1000);
+
+                        // console.log("Number available: " + res[i].stock_quantity + "\n");
+                        // setTimeout(start, 1000);
+
                         // for (var i = 0; i < res.length; i++) {
                         //     console.log("You chose: " + res[i].item_id);
                     }
