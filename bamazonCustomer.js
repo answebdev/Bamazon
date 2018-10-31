@@ -34,14 +34,12 @@ connection.connect(function (err) {
 function displayTable() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
-        // Instantiate
+        // Instantiate Table
         var table = new Table({
-            head: ['PRODUCT ID', 'PRODUCT NAME', 'DEPARTMENT NAME', 'PRICE', 'NUMBER AVAILABLE'],
-            colWidths: [12, 60, 35, 10, 20]
+            head: ['PRODUCT ID', 'PRODUCT NAME', 'DEPARTMENT NAME', 'PRICE', 'NO. AVAILABLE'],
+            colWidths: [12, 60, 35, 10, 15]
         });
         for (var i = 0; i < res.length; i++) {
-
-
 
             // Create table
             var newRow = [res[i].item_id, res[i].product_name, res[i].department_name, "$" + res[i].price.toFixed(2), res[i].stock_quantity];
@@ -87,8 +85,9 @@ function start() {
                     console.log("\nYou chose Product ID " + res[i].item_id + ": " + res[i].product_name);
                     console.log("You chose: " + inquirerResponse.quantity);
                     var inStock = res[0].inStock;
-                    if (inStock < quantity) {
-                        console.log("We don't have enough");
+                    // if (inStock < quantity) {
+                        if (inquirerResponse.quantity > res[i].stock_quantity) {
+                        console.log("Insufficient quantity!");
                     } else {
                         inStock -= quantity;
                         // console.log("IN STOCK: " + inStock);
