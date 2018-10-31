@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require('cli-table');
 var colors = require('colors');
 
 // Create the connection information for the sql database
@@ -23,7 +24,7 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     console.log("Connected as ID: " + connection.threadId + "\n");
-    console.log(colors.yellow("W E L C O M E  T O  B A M A Z O N"));
+    console.log(colors.yellow("W E L C O M E  T O  B A M A Z O N\n"));
     // Display table of products in the terminal
     displayTable();
     // Run the start function after the connection is made to prompt the user
@@ -33,51 +34,70 @@ connection.connect(function (err) {
 function displayTable() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
+        // Instantiate
+        var table = new Table({
+            head: ['PRODUCT ID', 'PRODUCT NAME', 'DEPARTMENT NAME', 'PRICE', 'NUMBER AVAILABLE'],
+            colWidths: [12, 60, 35, 10, 20]
+        });
         for (var i = 0; i < res.length; i++) {
-            console.log("\nPRODUCT ID: " + res[i].item_id);
-            console.log("PRODUCT NAME: " + res[i].product_name);
-            console.log("DEPARTMENT NAME: " + res[i].department_name);
-            console.log("PRICE: " + "$" + res[i].price.toFixed(2));
-            console.log("NUMBER AVAILABLE IN STOCK: " + res[i].stock_quantity + "\n");
+
+
+
+            // Create table
+            var newRow = [res[i].item_id, res[i].product_name, res[i].department_name, "$" + res[i].price.toFixed(2), res[i].stock_quantity];
+            table.push(newRow);
         }
+        console.log(table.toString());
         start();
     })
 }
 
 function start() {
-    inquirer.prompt(
+    inquirer.prompt([
         {
             name: "productID",
-            message: "What would you like to buy? Please enter the Product ID.",
-            type: "ID"
+            message: "What would you like to buy? Please enter the Product ID:",
+            type: "input",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
         },
         {
             name: "quantity",
             message: "How many would you like to buy?",
-            type: "quantity"
+            type: "input",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
         }
-    )
-        // .then(function (inquirerResponse) {
-        //     if (inquirerResponse.confirm) {
-        //         console.log("\nYou've entered: " + inquirerResponse.name);
-        //         console.log("\nYou've ordered: " + inquirerResponse.quantity);
-        //     }
-        //     else {
-        //         console.log("\nTry again.");
-        //     }
-        // });
-
-        // .then(function (inquirerResponse) {
-        //     var correct = false;
-        //     for (var i = 0; i < inquirerResponse.length; i++) {
-        //         if (res[i].item_id === inquirerResponse.productID) {
-        //             correct = true;
-        //             var IDNumber = inquirerResponse.productID;
-        //             console.log("You chose: " + IDNumber);
-        //             // var id=i;
-        //         }
-        //     }
-        // })
-
-        
+    ])
+        .then(function (inquirerResponse) {
+            var productID = inquirerResponse.productID;
+            var quantity = inquirerResponse.quantity;
+            // var query = "SELECT item_ID, product_name, department_name, price, stock_quantity FROM products WHERE ?";
+            connection.query('SELECT * FROM products WHERE item_id=?', [productID], function (err, res) {
+                if (err) throw err;
+                for (var i = 0; i < res.length; i++) {
+                    console.log("\nYou chose Product ID " + res[i].item_id + ": " + res[i].product_name);
+                    console.log("You chose: " + inquirerResponse.quantity);
+                    var inStock = res[0].inStock;
+                    if (inStock < quantity) {
+                        console.log("We don't have enough");
+                    } else {
+                        inStock -= quantity;
+                        // console.log("IN STOCK: " + inStock);
+                        console.log("Number available: " + res[i].stock_quantity + "\n");
+                        setTimeout(start, 1000);
+                        // for (var i = 0; i < res.length; i++) {
+                        //     console.log("You chose: " + res[i].item_id);
+                    }
+                }
+            })
+        })
 }
