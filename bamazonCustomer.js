@@ -85,7 +85,7 @@ function start() {
             //     // process.exit(-1);
             // }
             if (inquirerResponse.productID > 10) {
-                console.log("\nThere is no such product. Please try again.\n");
+                console.log(colors.cyan("\nPlease enter a valid product ID to continue.\n"));
                 return start();
             }
             var productID = inquirerResponse.productID;
@@ -95,7 +95,7 @@ function start() {
                 if (err) throw err;
                 var price = res[0].price.toFixed(2);
                 for (var i = 0; i < res.length; i++) {
-                    console.log("\nYou chose Product ID " + res[i].item_id + ": " + res[i].product_name);
+                    console.log("\nYou have selected product ID " + res[i].item_id + ": " + res[i].product_name);
                     console.log("Quantity: " + inquirerResponse.quantity);
                     if (inquirerResponse.quantity > res[i].stock_quantity) {
                         console.log(colors.cyan("\nThere are not enough in stock. Please try again.\n"));
