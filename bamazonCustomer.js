@@ -77,6 +77,7 @@ function start() {
     ])
         .then(function (inquirerResponse) {
             // if (inquirerResponse.productID.toUpperCase() == 'Q') {
+            // connection.end();
             //     console.log("GOODBYE!");
             //     // printUsageToStdout();
             //     // process.exit();
@@ -94,6 +95,7 @@ function start() {
             connection.query('SELECT * FROM products WHERE item_id=?', [productID], function (err, res) {
                 if (err) throw err;
                 var price = res[0].price.toFixed(2);
+                var orderTotal = 0;
                 for (var i = 0; i < res.length; i++) {
                     console.log("\nYou have selected product ID " + res[i].item_id + ": " + res[i].product_name);
                     console.log("Quantity: " + inquirerResponse.quantity);
@@ -104,7 +106,7 @@ function start() {
                     } else {
                         connection.query("UPDATE products SET stock_quantity='" + (res[i].stock_quantity - inquirerResponse.quantity) + "' WHERE item_id='" + res[i].item_id + "'", function (err, res) {
                             console.log(colors.cyan("\nItem added to cart."));
-                            console.log(colors.cyan("Your total comes to $" + price * inquirerResponse.quantity + ".\n"));
+                            console.log(colors.cyan("Your total comes to $" + (price * inquirerResponse.quantity).toFixed(2)) + ".\n");
                             displayTable();
                         })
                     }
