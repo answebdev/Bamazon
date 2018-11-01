@@ -76,13 +76,17 @@ function start() {
         }
     ])
         .then(function (inquirerResponse) {
-            if (inquirerResponse.productID.toUpperCase() == 'Q') {
-                console.log("GOODBYE!");
-                // printUsageToStdout();
-                // process.exit();
-                // process.exitCode = 1;
-                // process.on('exit', function() { process.exit(1); });
-                // process.exit(-1);
+            // if (inquirerResponse.productID.toUpperCase() == 'Q') {
+            //     console.log("GOODBYE!");
+            //     // printUsageToStdout();
+            //     // process.exit();
+            //     // process.exitCode = 1;
+            //     // process.on('exit', function() { process.exit(1); });
+            //     // process.exit(-1);
+            // }
+            if (inquirerResponse.productID > 10) {
+                console.log("\nThere is no such product. Please try again.\n");
+                return start();
             }
             var productID = inquirerResponse.productID;
             var quantity = inquirerResponse.quantity;
@@ -92,16 +96,14 @@ function start() {
                 var price = res[0].price.toFixed(2);
                 for (var i = 0; i < res.length; i++) {
                     console.log("\nYou chose Product ID " + res[i].item_id + ": " + res[i].product_name);
-                    console.log("You chose: " + inquirerResponse.quantity);
-                    // var inStock = res[0].inStock;
-                    // if (inStock < quantity) {
+                    console.log("Quantity: " + inquirerResponse.quantity);
                     if (inquirerResponse.quantity > res[i].stock_quantity) {
                         console.log(colors.cyan("\nThere are not enough in stock. Please try again.\n"));
                         // console.log(colors.cyan("\nThere are only " + res[i].stock_quantity + " of those in stock. Please try again.\n"));
                         start();
                     } else {
                         connection.query("UPDATE products SET stock_quantity='" + (res[i].stock_quantity - inquirerResponse.quantity) + "' WHERE item_id='" + res[i].item_id + "'", function (err, res) {
-                            console.log(colors.cyan("\nItem added to cart!"));
+                            console.log(colors.cyan("\nItem added to cart."));
                             console.log(colors.cyan("Your total comes to $" + price * inquirerResponse.quantity + ".\n"));
                             displayTable();
                         })
