@@ -53,8 +53,29 @@ function displayTable() {
 function start() {
     inquirer.prompt([
         {
+            "name": "action",
+            "message": colors.yellow("Welcome to Bamazon! What would you like to do?"),
+            "type": "list",
+            "choices": ["Buy an item", "Exit"]
+        }
+    ]).then(function (answer) {
+        switch (answer.action) {
+            case "Buy an item":
+                shop();
+                break;
+            case "Exit":
+                console.log(colors.cyan("\nThank you for shopping with us. Please come again."))
+                connection.end()
+                break;
+        }
+    })
+}
+
+function shop() {
+    inquirer.prompt([
+        {
             name: "productID",
-            message: "What would you like to buy? Please enter the Product ID (or type 'Q' to Quit):",
+            message: "What would you like to buy? Please enter the Product ID:",
             type: "input",
             validate: function (value) {
                 if (isNaN(value) === false) {
