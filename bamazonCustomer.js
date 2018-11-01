@@ -54,7 +54,7 @@ function start() {
     inquirer.prompt([
         {
             name: "productID",
-            message: "What would you like to buy? Please enter the Product ID:",
+            message: "What would you like to buy? Please enter the Product ID (or type 'Q' to Quit):",
             type: "input",
             validate: function (value) {
                 if (isNaN(value) === false) {
@@ -76,23 +76,33 @@ function start() {
         }
     ])
         .then(function (inquirerResponse) {
+            if (inquirerResponse.productID.toUpperCase() == 'Q') {
+                console.log("GOODBYE!");
+                // printUsageToStdout();
+                // process.exit();
+                // process.exitCode = 1;
+                // process.on('exit', function() { process.exit(1); });
+                // process.exit(-1);
+            }
             var productID = inquirerResponse.productID;
             var quantity = inquirerResponse.quantity;
             // var query = "SELECT item_ID, product_name, department_name, price, stock_quantity FROM products WHERE ?";
             connection.query('SELECT * FROM products WHERE item_id=?', [productID], function (err, res) {
                 if (err) throw err;
+                var price = res[0].price.toFixed(2);
                 for (var i = 0; i < res.length; i++) {
                     console.log("\nYou chose Product ID " + res[i].item_id + ": " + res[i].product_name);
                     console.log("You chose: " + inquirerResponse.quantity);
                     // var inStock = res[0].inStock;
                     // if (inStock < quantity) {
-                        if (inquirerResponse.quantity > res[i].stock_quantity) {
-                        console.log("Insufficient quantity! Please try again.\n");
+                    if (inquirerResponse.quantity > res[i].stock_quantity) {
+                        console.log(colors.cyan("\nInsufficient quantity! Not enough in stock. Please try again.\n"));
                         start();
                     } else {
 
-                        connection.query("UPDATE products SET stock_quantity='"+(res[i].stock_quantity-inquirerResponse.quantity)+"' WHERE product_name='"+res[i].product_name+"'",function(err,res) {
-                            console.log("Item added to cart!");
+                        connection.query("UPDATE products SET stock_quantity='" + (res[i].stock_quantity - inquirerResponse.quantity) + "' WHERE product_name='" + res[i].product_name + "'", function (err, res) {
+                            console.log(colors.cyan("\nItem added to cart!"));
+                            console.log(colors.cyan("Your total comes to $" + price*inquirerResponse.quantity + ".\n"));
                             displayTable();
                         })
 
