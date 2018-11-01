@@ -127,7 +127,7 @@ function shop() {
                             console.log(colors.cyan("\nYour order was placed successfully!"));
                             console.log(colors.cyan("\nItem: " + product));
                             console.log(colors.cyan("Quantity: " + inquirerResponse.quantity));
-                            console.log(colors.cyan("Your total comes to $" + (price * inquirerResponse.quantity).toFixed(2)) + ".\n");
+                            console.log(colors.cyan("Your total comes to $" + (price * inquirerResponse.quantity).toFixed(2)+".\n"));
                             displayTable();
                         })
                     }
