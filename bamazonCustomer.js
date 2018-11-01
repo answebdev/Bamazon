@@ -96,26 +96,15 @@ function start() {
                     // var inStock = res[0].inStock;
                     // if (inStock < quantity) {
                     if (inquirerResponse.quantity > res[i].stock_quantity) {
-                        console.log(colors.cyan("\nInsufficient quantity! Not enough in stock. Please try again.\n"));
+                        console.log(colors.cyan("\nThere are not enough in stock. Please try again.\n"));
+                        // console.log(colors.cyan("\nThere are only " + res[i].stock_quantity + " of those in stock. Please try again.\n"));
                         start();
                     } else {
-
-                        connection.query("UPDATE products SET stock_quantity='" + (res[i].stock_quantity - inquirerResponse.quantity) + "' WHERE product_name='" + res[i].product_name + "'", function (err, res) {
+                        connection.query("UPDATE products SET stock_quantity='" + (res[i].stock_quantity - inquirerResponse.quantity) + "' WHERE item_id='" + res[i].item_id + "'", function (err, res) {
                             console.log(colors.cyan("\nItem added to cart!"));
-                            console.log(colors.cyan("Your total comes to $" + price*inquirerResponse.quantity + ".\n"));
+                            console.log(colors.cyan("Your total comes to $" + price * inquirerResponse.quantity + ".\n"));
                             displayTable();
                         })
-
-
-
-                        // inStock -= quantity;
-                        // console.log("IN STOCK: " + inStock);
-
-                        // console.log("Number available: " + res[i].stock_quantity + "\n");
-                        // setTimeout(start, 1000);
-
-                        // for (var i = 0; i < res.length; i++) {
-                        //     console.log("You chose: " + res[i].item_id);
                     }
                 }
             })
