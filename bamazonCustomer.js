@@ -27,8 +27,6 @@ connection.connect(function (err) {
     console.log(colors.yellow("W E L C O M E  T O  B A M A Z O N\n"));
     // Display table of products in the terminal
     displayTable();
-    // Run the start function after the connection is made to prompt the user
-    // start();
 });
 
 function displayTable() {
@@ -40,7 +38,6 @@ function displayTable() {
             colWidths: [12, 60, 35, 10, 15]
         });
         for (var i = 0; i < res.length; i++) {
-
             // Create table
             var newRow = [res[i].item_id, res[i].product_name, res[i].department_name, "$" + res[i].price.toFixed(2), res[i].stock_quantity];
             table.push(newRow);
@@ -58,8 +55,8 @@ function start() {
             "type": "list",
             "choices": ["Buy an item", "Exit"]
         }
-    ]).then(function (answer) {
-        switch (answer.action) {
+    ]).then(function (choice) {
+        switch (choice.action) {
             case "Buy an item":
                 shop();
                 break;
