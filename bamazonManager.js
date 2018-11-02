@@ -142,7 +142,7 @@ function addToInv() {
                     connection.query("UPDATE products SET stock_quantity='" + (parseInt(res[i].stock_quantity) + parseInt(inquirerResponse.quantity)) + "' WHERE item_id='" + res[i].item_id + "'", function (err, res) {
                         console.log(colors.cyan("\nYou have succesfully added to the inventory!"));
                         console.log(colors.cyan("\nItem: " + product));
-                        console.log(colors.cyan("Quantity: " + inquirerResponse.quantity));
+                        console.log(colors.cyan("Quantity Added: " + inquirerResponse.quantity));
                         displayTable();
                         // start();
                     })
