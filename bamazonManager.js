@@ -167,7 +167,7 @@ function addProduct() {
         },
         {
             "name": "departmentName",
-            "message": colors.yellow("Please select the department."),
+            "message": "Please select the department.",
             "type": "list",
             "choices": ["Clothing, Shoes & Jewelry", "Beauty and Personal Care",
                 "Home & Kitchen", "Candy & Chocolate", "Books", "Cell Phones & Accessories",
@@ -205,33 +205,32 @@ function addProduct() {
             // var quantity = inquirerResponse.quantity;
             // var query = "SELECT item_ID, product_name, department_name, price, stock_quantity FROM products WHERE ?";
             // connection.query('INSERT INTO products SET ?', newProductInfo, function (err, res) {
-            var newProductInfo = {
-                product_name: inquirerResponse.product_name,
-                department_name: inquirerResponse.department_name,
-                price: inquirerResponse.price,
-                stock_quantity: inquirerResponse.stock_quantity
-            }
-            connection.query('INSERT INTO products SET ?', newProductInfo, function (err, res) {
-                if (err) throw err;
-                // var product = res[0].product_name;
-                // var orderTotal = 0;
-                // for (var i = 0; i < res.length; i++) {
-
-                console.log("You have added the following item:\n");
-                console.log("PRODUCT NAME: " + inquirerResponse.product_name);
-                console.log("DEPARTMENT NAME: " + inquirerResponse.department_name); 
-                console.log("PRICE: " + inquirerResponse.price);
-                console.log("NUMBER OF ITEMS ADDED " + inquirerResponse.stock_quantity + "\n");
-
-                // connection.query("UPDATE products SET stock_quantity='" + (parseInt(res[i].stock_quantity) + parseInt(inquirerResponse.quantity)) + "' WHERE item_id='" + res[i].item_id + "'", function (err, res) {
-                //     console.log(colors.cyan("\nYou have succesfully added to the inventory!"));
-                //     console.log(colors.cyan("\nItem: " + product));
-                //     console.log(colors.cyan("Quantity: " + inquirerResponse.quantity));
-
-                displayTable();
-                // start();
-            })
+            // var newProductInfo = {
+            //     product_name: inquirerResponse.product_name,
+            //     department_name: inquirerResponse.department_name,
+            //     price: inquirerResponse.price,
+            //     stock_quantity: inquirerResponse.stock_quantity
             // }
-            // }
+            // var product_name;
+            // var department_name;
+            // var price;
+            // var stock_quantity;
+
+            var product_name = inquirerResponse.productName;
+            var department_name = inquirerResponse.departmentName;
+            var price = inquirerResponse.cost;
+            var stock_quantity = inquirerResponse.quantity;
+
+            connection.query("INSERT INTO products SET ?",
+                { product_name, department_name, price, stock_quantity }, function (err, res) {
+
+                    console.log(colors.cyan("\nYou have added the following item:\n"));
+                    console.log(colors.cyan("PRODUCT NAME: " + product_name));
+                    console.log(colors.cyan("DEPARTMENT NAME: " + department_name));
+                    console.log(colors.cyan("PRICE: " + "$" + price));
+                    console.log(colors.cyan("NUMBER OF ITEMS ADDED: " + stock_quantity + "\n"));
+
+                    displayTable();
+                })
         })
 }
