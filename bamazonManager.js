@@ -3,9 +3,6 @@ var inquirer = require("inquirer");
 var Table = require('cli-table');
 var colors = require('colors');
 
-// require('events').EventEmitter.prototype._maxListeners = 100;
-// require('events').EventEmitter.defaultMaxListeners = 15;
-
 // Create the connection information for the sql database
 var connection = mysql.createConnection({
     host: "localhost",
@@ -28,20 +25,22 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log("Connected as ID: " + connection.threadId + "\n");
     console.log(colors.yellow("B A M A Z O N  M A N A G E R\n"));
+
     // Display table of products in the terminal
-    // displayTable();
     start();
 });
 
 function displayTable() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
+
         // Instantiate Table
         var table = new Table({
             head: ['PRODUCT ID', 'PRODUCT NAME', 'DEPARTMENT NAME', 'PRICE', 'NO. AVAILABLE'],
             colWidths: [12, 60, 35, 10, 15]
         });
         for (var i = 0; i < res.length; i++) {
+
             // Create table
             var newRow = [res[i].item_id, res[i].product_name, res[i].department_name, "$" + res[i].price.toFixed(2), res[i].stock_quantity];
             table.push(newRow);
@@ -90,11 +89,8 @@ function viewLowInv() {
         })
 
         for (var i = 0; i < res.length; i++) {
-            // if (res[i].stock_quantity < 5) {
             var newRow = [res[i].item_id, res[i].product_name, res[i].department_name, "$" + res[i].price.toFixed(2), res[i].stock_quantity];
-            // var newRow = [row.item_id, row.product_name, row.department_name, "$" + row.price.toFixed(2), row.stock_quantity];
             table.push(newRow);
-            // displayTable();
         }
         console.log("\n" + table.toString());
         start();
@@ -127,13 +123,12 @@ function addToInv() {
         }
     ])
         .then(function (inquirerResponse) {
-            if ((inquirerResponse.productID) > 10 || (inquirerResponse.productID < 1)) {
-                console.log(colors.cyan("\nPlease enter a valid product ID to continue.\n"));
-                return start();
-            }
+            // if ((inquirerResponse.productID) > 10 || (inquirerResponse.productID < 1)) {
+            //     console.log(colors.cyan("\nPlease enter a valid product ID to continue.\n"));
+            //     return start();
+            // }
             var productID = inquirerResponse.productID;
             var quantity = inquirerResponse.quantity;
-            // var query = "SELECT item_ID, product_name, department_name, price, stock_quantity FROM products WHERE ?";
             connection.query('SELECT * FROM products WHERE item_id=?', [productID], function (err, res) {
                 if (err) throw err;
                 var product = res[0].product_name;
@@ -144,9 +139,7 @@ function addToInv() {
                         console.log(colors.cyan("\nItem: " + product));
                         console.log(colors.cyan("Quantity Added: " + inquirerResponse.quantity));
                         displayTable();
-                        // start();
                     })
-                    // }
                 }
             })
         })
@@ -158,12 +151,6 @@ function addProduct() {
             name: "productName",
             message: "Please enter the name of the product you wish to add:",
             type: "input"
-            // validate: function (value) {
-            //     if (isNaN(value) === false) {
-            //         return true;
-            //     }
-            //     return false;
-            // }
         },
         {
             "name": "departmentName",
@@ -197,24 +184,6 @@ function addProduct() {
         }
     ])
         .then(function (inquirerResponse) {
-            // if ((inquirerResponse.productID) > 10 || (inquirerResponse.productID < 1)) {
-            //     console.log(colors.cyan("\nPlease enter a valid product ID to continue.\n"));
-            //     return start();
-            // }
-            // var productID = inquirerResponse.productID;
-            // var quantity = inquirerResponse.quantity;
-            // var query = "SELECT item_ID, product_name, department_name, price, stock_quantity FROM products WHERE ?";
-            // connection.query('INSERT INTO products SET ?', newProductInfo, function (err, res) {
-            // var newProductInfo = {
-            //     product_name: inquirerResponse.product_name,
-            //     department_name: inquirerResponse.department_name,
-            //     price: inquirerResponse.price,
-            //     stock_quantity: inquirerResponse.stock_quantity
-            // }
-            // var product_name;
-            // var department_name;
-            // var price;
-            // var stock_quantity;
 
             var product_name = inquirerResponse.productName;
             var department_name = inquirerResponse.departmentName;
@@ -223,6 +192,8 @@ function addProduct() {
 
             connection.query("INSERT INTO products SET ?",
                 { product_name, department_name, price, stock_quantity }, function (err, res) {
+                    if (err) throw err;
+                    console.log("PRODUCT ID: " + res.insertId);
 
                     console.log(colors.cyan("\nYou have added the following item:\n"));
                     console.log(colors.cyan("PRODUCT NAME: " + product_name));
