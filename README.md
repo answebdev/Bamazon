@@ -12,11 +12,10 @@ Bamazon is an Amazon-like command line app that uses Node.js and MySQL. There ar
 
 # Bamazon Demo
 
-Since this is a command line application, there is no HTML page to see this app in action. To see the Bamazon application in action, watch the [Bamazon demo video](https://gcccd.instructuremedia.com/embed/a55099cc-763c-4eb7-a93f-41aeef574080).
+Since this is a command line application, there is no page in the browser to see this app in action. To see the Bamazon application in action, watch the [Bamazon demo video](https://gcccd.instructuremedia.com/embed/a55099cc-763c-4eb7-a93f-41aeef574080).
 
 # Screenshots
 
 ![Screenshot 01](screenshots/bamazon-screenshot01.png "Customer View")
 
 ![Screenshot 02](screenshots/bamazon-screenshot02.png "Manager View")
-
